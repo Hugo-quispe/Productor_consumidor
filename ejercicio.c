@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>
+#include <unistd.h>
+#include <stdint.h>
 
 #define BUFF_SIZE   5		/* total number of slots */
 #define NP          3		/* total number of producers */
@@ -65,8 +67,13 @@ void *Consumer(void *arg)
         shared.out = (shared.out + 1) % BUFF_SIZE;
 
         printf("--> [C%d] consumed %d\n", index, item); fflush(stdout);
+        // salir de la seccion critica
+        sem_post(&shared.mutex);
+        // notificar que ya acabo 
+        sem_post(&shared.empty);
+        // duerme cada dos iteraciones
+        if (i % 2 == 1) sleep(1);
 
-        
     }
 }
 
