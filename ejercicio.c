@@ -52,7 +52,8 @@ void *Producer(void *arg)
 
 void *Consumer(void *arg)
 {
-    /* Fill in the code here */
+    int i, item, index;
+    index = (intptr_t)arg;
 }
 
 int main()
