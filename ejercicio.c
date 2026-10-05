@@ -23,7 +23,7 @@ void *Producer(void *arg)
 {
     int i, item, index;
 
-    index = (int)arg;
+    index = (intptr_t)arg;
 
     for (i=0; i < NITERS; i++) {
 
@@ -63,15 +63,36 @@ int main()
     sem_init(&shared.full;, 0, 0);
     sem_init(&shared.empty;, 0, BUFF_SIZE);
 
-    /* Insert code here to initialize mutex*/
+    //inicialmente el acceso al buffer esta disponible
+    sem_init($shared.mutex, 0,1);
+    shared.in = 0;
+    shared.out = 0;
 
+    //Creacion de productores
     for (index = 0; index < NP; index++)
-    {  
-       /* Create a new producer */
-       pthread_create(&idP;, NULL, Producer, (void*)index);
+    {
+        pthread_create(&idP[index], NULL, Producer,
+                       (void *)(intptr_t)index);
     }
 
-    /* Insert code here to create NC consumers */
+    // Creacion de consumidores
+    for (index = 0; index < NC; index++)
+    {
+        pthread_create(&idC[index], NULL, Consumer,
+                       (void *)(intptr_t)index);
+    }
+
+    // Esperar a que terminen los productores
+    for (index = 0; index < NP; index++)
+    {
+        pthread_join(idP[index], NULL);
+    }
+
+    // Esperar a que terminen los consumidores
+    for (index = 0; index < NC; index++)
+    {
+        pthread_join(idC[index], NULL);
+    }
 
     pthread_exit(NULL);
 }
