@@ -35,16 +35,16 @@ void *Producer(void *arg)
         /* Prepare to write item to buf */
 
         /* If there are no empty slots, wait */
-        sem_wait(&shared.empty;);
+        sem_wait(&shared.empty);
         /* If another thread uses the buffer, wait */
-        sem_wait(&shared.mutex;);
+        sem_wait(&shared.mutex);
         shared.buf[shared.in] = item;
         shared.in = (shared.in+1)%BUFF_SIZE;
         printf("[P%d] Producing %d ...\n", index, item); fflush(stdout);
         /* Release the buffer */
-        sem_post(&shared.mutex;);
+        sem_post(&shared.mutex);
         /* Increment the number of full slots */
-        sem_post(&shared.full;);
+        sem_post(&shared.full);
 
         /* Interleave  producer and consumer execution */
         if (i % 2 == 1) sleep(1);
@@ -73,20 +73,20 @@ void *Consumer(void *arg)
         sem_post(&shared.empty);
         // duerme cada dos iteraciones
         if (i % 2 == 1) sleep(1);
-
     }
+    return NULL;
 }
 
 int main()
 {
-    pthread_t idP, idC;
+    pthread_t idP[NP], idC[NC];
     int index;
 
-    sem_init(&shared.full;, 0, 0);
-    sem_init(&shared.empty;, 0, BUFF_SIZE);
+    sem_init(&shared.full, 0, 0);
+    sem_init(&shared.empty, 0, BUFF_SIZE);
 
     //inicialmente el acceso al buffer esta disponible
-    sem_init($shared.mutex, 0,1);
+    sem_init(&shared.mutex, 0, 1);
     shared.in = 0;
     shared.out = 0;
 
