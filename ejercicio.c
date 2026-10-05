@@ -60,7 +60,13 @@ void *Consumer(void *arg)
         sem_wait(&shared.full);
         // entra a la seccion critica  
         sem_wait(&shared.mutex);
+        // retirar elemento
+        item = shared.buf[shared.out];
+        shared.out = (shared.out + 1) % BUFF_SIZE;
 
+        printf("--> [C%d] consumed %d\n", index, item); fflush(stdout);
+
+        
     }
 }
 
