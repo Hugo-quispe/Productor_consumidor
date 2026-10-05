@@ -54,6 +54,14 @@ void *Consumer(void *arg)
 {
     int i, item, index;
     index = (intptr_t)arg;
+    // iniciacion del ciclo consumidor
+    for(int i = 0; i < NITERS; i++){
+        // esperar hasta que haya un elemento
+        sem_wait(&shared.full);
+        // entra a la seccion critica  
+        sem_wait(&shared.mutex);
+
+    }
 }
 
 int main()
